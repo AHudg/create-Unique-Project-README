@@ -1,8 +1,7 @@
-// TODO: Include packages needed for this application
 const inquirer = require('inquirer');
 const generateMarkdown = require('./utils/generateMarkdown');
+const fs = require('fs');
 
-// TODO: Create an array of questions for user input
 const questions = [
     {
         type: 'input',
@@ -51,8 +50,15 @@ const questions = [
     {
         type: 'checkbox',
         name: 'license',
-        message: 'What license(s) are associated with this project?',
-        choices: ['MIT','The Unlicense','GNU GPLv3','Apache License 2.0','Mozilla Public License 2.0']
+        message: 'What license(s) are associated with this project? You may only choose one or none.',
+        choices: ['MIT','The Unlicense','GNU GPLv3','Apache License 2.0','Mozilla Public License 2.0'],
+        validate: licenseInput => {
+            if (licenseInput.length > 1) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     },
     {
         type: 'input',
@@ -78,21 +84,30 @@ const questions = [
     }
 ];
 
-// TODO: Create a function to initialize app
 function init() {
-    // utilizes inquirer.prompt to return a promise
-    // the first argument is an array of question objects
     return inquirer.prompt(questions)
 };
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+function writeToFile(fileName, data) {
+    return new Promise((resolve, reject) => {
+        fs.writeFile('./dist/'+fileName+'.md', data, err => {
+            if (err) {
+                reject(err);
+                return;
+            }
 
-// Function call to initialize app
+            resolve({
+                ok: true,
+                message: 'README was written!'
+            });
+        });
+    });
+};
+
 init()
     .then(projectData => {
         return generateMarkdown(projectData);
     })
     .then(markdownCode => {
-        console.log(markdownCode);
+        return writeToFile('GenREADME',markdownCode)
     })
