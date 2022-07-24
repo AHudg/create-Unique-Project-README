@@ -109,5 +109,5 @@ init()
         return generateMarkdown(projectData);
     })
     .then(markdownCode => {
-        return writeToFile('GenREADME',markdownCode)
+        return writeToFile('README',markdownCode)
     })
