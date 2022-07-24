@@ -82,11 +82,14 @@ const questions = [
 function init() {
     // utilizes inquirer.prompt to return a promise
     // the first argument is an array of question objects
-    return inquirer.prompt(questions);
+    return inquirer.prompt(questions)
 };
 
 // TODO: Create a function to write README file
 function writeToFile(fileName, data) {}
 
 // Function call to initialize app
-init();
+init()
+    .then(projectData => {
+        return generateMarkdown(projectData);
+    })
