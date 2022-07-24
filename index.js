@@ -93,3 +93,6 @@ init()
     .then(projectData => {
         return generateMarkdown(projectData);
     })
+    .then(markdownCode => {
+        console.log(markdownCode);
+    })
